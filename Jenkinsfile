@@ -16,21 +16,29 @@ pipeline {
   }
   stages {
       stage("init") {
-          make init
+          steps {
+              make init
+          }
       }
       stage("workspace") {
-          sh """
+          steps {
+              sh """
 terraform workspace select jenkins-lab-2
 if [[ $? -ne 0 ]];
   terraform workspace new jenkins-lab-2
 fi
 """
+          }
       }
       stage("plan") {
-          make plan
+          steps {
+              make plan
+          }
       }
       stage("apply") {
-          make apply
+          steps {
+              make apply
+          }
       }
   }
 }
