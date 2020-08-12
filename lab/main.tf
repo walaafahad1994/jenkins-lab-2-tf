@@ -172,7 +172,12 @@ resource "aws_instance" "webserver" {
   associate_public_ip_address = true
   tags                        = module.tags_webserver.tags
   depends_on                  = [aws_instance.api]
+
+  provisioner "local-exec" {
+    command = "echo ${aws_instance.api.0.public_ip} > ip_address.txt"
+  }
 }
+
 
 resource "aws_instance" "api" {
   count                       = 1
@@ -183,6 +188,7 @@ resource "aws_instance" "api" {
   key_name                    = aws_key_pair.lab_keypair.id
   associate_public_ip_address = true
   tags                        = module.tags_webserver.tags
+
 }
 
 resource "aws_instance" "bastion" {
@@ -193,7 +199,4 @@ resource "aws_instance" "bastion" {
   key_name               = aws_key_pair.lab_keypair.id
   tags                   = module.tags_bastion.tags
 }
-provisioner "local-exec"
-{
-command = "echo ${aws_instance.api.public_ip} > ip_address.txt"
-}
+
