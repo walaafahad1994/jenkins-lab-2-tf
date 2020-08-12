@@ -55,8 +55,8 @@ resource "aws_vpc" "lab" {
   enable_dns_hostnames = true
 }
 
-resource "aws_route53_zone" "bryan_dobc" {
-  name = "bryan.dobc"
+resource "aws_route53_zone" "walaa_dobc" {
+  name = "walaa.dobc"
   tags = module.tags_network.tags
 
   vpc {
@@ -155,7 +155,7 @@ resource "aws_key_pair" "lab_keypair" {
 }
 
 resource "aws_route53_record" "webserver" {
-  zone_id = aws_route53_zone.bryan_dobc.id
+  zone_id = aws_route53_zone.walaa_dobc.id
   name    = "webserver"
   type    = "A"
   ttl     = 300
@@ -192,4 +192,8 @@ resource "aws_instance" "bastion" {
   vpc_security_group_ids = [aws_security_group.bastion.id]
   key_name               = aws_key_pair.lab_keypair.id
   tags                   = module.tags_bastion.tags
+}
+provisioner "local-exec"
+{
+command = "echo ${aws_instance.api.public_ip} > ip_address.txt"
 }
